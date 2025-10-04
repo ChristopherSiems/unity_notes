@@ -74,7 +74,7 @@ def add_text_with_ip(text, ip_address):
         
         if existing_point:
             # Text exists - get current IP list and add new IP
-            current_ips = existing_point[0].payload.get("ip_addresses", [])
+            current_ips = existing_point[0].payload.get("ip_list", [])
             
             # Only add IP if it's not already in the list
             if ip_address not in current_ips:
@@ -83,7 +83,7 @@ def add_text_with_ip(text, ip_address):
                 # Update the existing point with new IP list
                 qdrant_client.set_payload(
                     collection_name=COLLECTION_NAME,
-                    payload={"ip_addresses": current_ips},
+                    payload={"ip_list": current_ips},
                     points=[point_id]
                 )
                 print(f"Added IP {ip_address} to existing text: '{text}'")
@@ -105,7 +105,7 @@ def add_text_with_ip(text, ip_address):
                 vector=vector,
                 payload={
                     "text": text,
-                    "ip_addresses": [ip_address]  # Store as list
+                    "ip_list": [ip_address]  # Store as list
                 }
             )
         ]
@@ -135,7 +135,7 @@ def view_all_data():
     
     print(f"Stored Entries:\n")
     for point in points:
-        ip_list = point.payload.get('ip_addresses', [])
+        ip_list = point.payload.get('ip_list', [])
         print(f"ID: {point.id}")
         print(f"  Text: {point.payload.get('text')}")
         print(f"  IP Addresses ({len(ip_list)}): {', '.join(ip_list)}")
@@ -172,7 +172,7 @@ def search_similar_texts(query_text, score_threshold=0.7):
             "id": hit.id,
             "score": hit.score,
             "text": hit.payload.get("text"),
-            "ip_addresses": hit.payload.get("ip_addresses", [])
+            "ip_list": hit.payload.get("ip_list", [])
         })
     
     return results
@@ -194,7 +194,7 @@ if __name__ == "__main__":
     #print("VIEWING ALL STORED DATA")
     #view_all_data()
     
-    test()
+    #test()
     #print("SEARCHING FOR SIMILAR TEXTS (Score >= 0.7)")
     
     # Step 3: Search for similar texts
@@ -208,14 +208,14 @@ if __name__ == "__main__":
         for i, result in enumerate(results, 1):
             print(f"Result {i}:")
             print(f"  Text: {result['text']}")
-            print(f"  IP Addresses ({len(result['ip_addresses'])}): {', '.join(result['ip_addresses'])}")
+            print(f"  IP Addresses ({len(result['ip_list'])}): {', '.join(result['ip_list'])}")
             print(f"  Similarity Score: {result['score']:.4f}")
             print()
         
         # Extract all unique IP addresses from results
         all_ips = []
         for r in results:
-            all_ips.extend(r["ip_addresses"])
+            all_ips.extend(r["ip_list"])
         unique_ips = list(set(all_ips))
         
         print(f"All unique IP addresses from similar texts: {unique_ips}")
