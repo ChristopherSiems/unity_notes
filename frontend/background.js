@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
   chrome.contextMenus.create({
     id: "requestNotes",
-    title: "Request Notes",
+    title: "Get Notes",
     contexts: ["selection"]
   });
 });
@@ -65,7 +65,7 @@ function showAddPopup(selectedText) {
     popup = document.createElement("div");
     popup.id = "highlight-popup-ext";
     popup.innerHTML = `
-        <h3 style="margin-top: 15px; text-align: center; font-size: 16px; color: #333;">Publish Note</h3>
+        <h3 style="margin-top: 8px; text-align: center; font-size: 16px; color: #333;">Publish Note</h3>
         <textarea id="noteBox" placeholder="Write your note here..." style="
             resize: none;
             padding: 10px;
@@ -216,7 +216,7 @@ async function showSummaryPopup(selectedText) {
     popup = document.createElement("div");
     popup.id = "summary-popup-ext";
     popup.innerHTML = `
-        <h3 style="margin-top: 15px; text-align: center; font-size: 16px; color: #333;">Summary</h3>
+        <h3 style="margin-top: 8px; text-align: center; font-size: 16px; color: #333;">Received Notes</h3>
         <div id="summaryContent" style="
             font-size: 14px;
             text-align: left;
@@ -224,7 +224,7 @@ async function showSummaryPopup(selectedText) {
             max-height: 200px;
             overflow-y: auto;
             margin-bottom: 15px;
-        ">Loading summary...</div>
+        ">Loading notes...</div>
     `;
 
     Object.assign(popup.style, {
