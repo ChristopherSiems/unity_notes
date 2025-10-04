@@ -74,7 +74,7 @@ def get_summary():
     Get summary for statement
     Expected JSON body:
     {
-        "statement": "Statement to hash"
+        "statement": "Statement to search"
     }
     """
 
@@ -85,6 +85,10 @@ def get_summary():
             return jsonify({"error": "No data provided"}), 400
 
         statement = data.get("statement")
+        socket_manager = SocketManager()
+        
+        out = socket_manager.get_notes(statement)
+        print(out)
 
         # get summary
 

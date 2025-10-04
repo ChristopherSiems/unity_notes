@@ -16,11 +16,14 @@ class SocketManager:
             output: list of notes related to statement
         """
 
-        pass 
-        #  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        # s.connect(("192.168.1.10", 9000))
-        # s.sendall(b"STATUS")
-        # data = s.recv(1024)
+        server_socket = socket(AF_INET, SOCK_STREAM)
+        server_socket.connect((SERVER_NAME, SERVER_PORT))
+        server_socket.send(
+            dumps({"type": "get_ips", "statement": statement}).encode("UTF-8")
+        )
+        ips = loads(server_socket.recv(BUFFER_SIZE).decode("UTF-8"))
+        server_socket.close()
+        return ips
     
     def add_statement_to_central(statement:str) -> None: 
         server_socket = socket(AF_INET, SOCK_STREAM)
