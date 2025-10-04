@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from xxhash import xxh128_intdigest
+from xxhash import xxh64_intdigest
 from contextlib import contextmanager
 
 # Create base class for declarative models
@@ -31,7 +31,7 @@ class NoteManager:
 
     def get_notes_by_hash(self, statement: str) -> list:
         """Return all notes that match the hash of the given statement."""
-        hash_val = xxh128_intdigest(statement)
+        hash_val = xxh64_intdigest(statement)
         return self.session.query(Notes).filter_by(hash=hash_val).all()
 
 
