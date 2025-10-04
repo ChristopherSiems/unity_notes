@@ -67,5 +67,5 @@ if __name__ == "__main__":
     # init_db()
     with db_session() as session: 
         
-        NoteManager(session = session).create('a', 'hello foef')
+        NoteManager(session = session).create('the earth is flat', 'it is not flat')
     
