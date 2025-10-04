@@ -51,7 +51,37 @@ def get_note_by_hash(hash_val):
     try:
         #get overview
         pass
+
     except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/summary', methods=['POST'])
+def add_note():
+    """
+    Get summary for statement
+    Expected JSON body:
+    {
+        "statement": "Statement to hash"
+    }
+    """
+
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        
+        statement = data.get('statement')
+        
+        #get summary
+        
+        return jsonify({
+            'summary': "default summary"
+        }), 201
+        
+    except Exception as e:
+
         return jsonify({'error': str(e)}), 500
 
 
