@@ -8,3 +8,4 @@ env/
 *venv
 .env
 qdrant_storage/
+__pychache__/
