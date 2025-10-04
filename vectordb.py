@@ -1,8 +1,9 @@
 from google import genai
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue
-import hashlib
 import os
+from xxhash import xxh64_intdigest
+
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
@@ -47,31 +48,9 @@ def text_to_id(text):
         Integer ID
     """
     # Create hash of text and convert to integer
-    hash_object = hashlib.md5(text.encode())
+    hash_object = xxh64_intdigest(text.encode())
     # Take first 8 bytes and convert to int (stays within reasonable range)
-    return int(hash_object.hexdigest()[:16], 16)
-
-
-def setup_collection():
-    """
-    Create or recreate the Qdrant collection with proper configuration.
-    Gemini text-embedding-004 produces 768-dimensional vectors.
-    """
-    # Delete collection if it exists
-    try:
-        qdrant_client.delete_collection(collection_name=COLLECTION_NAME)
-    except:
-        pass
-    
-    # Create new collection
-    qdrant_client.create_collection(
-        collection_name=COLLECTION_NAME,
-        vectors_config=VectorParams(
-            size=768,
-            distance=Distance.COSINE
-        ),
-    )
-    print(f"Collection '{COLLECTION_NAME}' created successfully")
+    return hash_object
 
 
 def add_text_with_ip(text, ip_address):
@@ -199,26 +178,23 @@ def search_similar_texts(query_text, score_threshold=0.7):
     return results
 
 
+def test():
+    add_text_with_ip("the earth is flat", "192.168.1.100")
+    add_text_with_ip("the earth is round", "10.0.0.45")
+    add_text_with_ip("our planet is spherical", "172.16.0.200")
+    add_text_with_ip("the earth is flat", "203.0.113.50")  # Same text, different IP
+    add_text_with_ip("pizza is delicious", "192.168.1.100")
+    add_text_with_ip("the earth is flat", "198.51.100.75")  # Same text again!
+    add_text_with_ip("the moon orbits earth", "10.0.0.87")
+    add_text_with_ip("the earth is flat", "192.168.1.100")  # Duplicate IP - won't add
+    
 # Example usage
 if __name__ == "__main__":
-    # Step 1: Setup collection
-    #setup_collection()
     
-    # Step 2: Add sample data - notice "the earth is flat" appears twice with different IPs
-
-    #add_text_with_ip("the earth is flat", "192.168.1.100")
-    #add_text_with_ip("the earth is round", "10.0.0.45")
-    #add_text_with_ip("our planet is spherical", "172.16.0.200")
-    #add_text_with_ip("the earth is flat", "203.0.113.50")  # Same text, different IP
-    #add_text_with_ip("pizza is delicious", "192.168.1.100")
-    #add_text_with_ip("the earth is flat", "198.51.100.75")  # Same text again!
-    #add_text_with_ip("the moon orbits earth", "10.0.0.87")
-    #add_text_with_ip("the earth is flat", "192.168.1.100")  # Duplicate IP - won't add
-    
-
     #print("VIEWING ALL STORED DATA")
     #view_all_data()
     
+    test()
     #print("SEARCHING FOR SIMILAR TEXTS (Score >= 0.7)")
     
     # Step 3: Search for similar texts
