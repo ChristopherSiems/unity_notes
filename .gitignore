@@ -1,5 +1,5 @@
-.python-version
-env/
 *venv
-.env
-qdrant_storage/
+*.db
+
+*__pychach
+*.pyc
