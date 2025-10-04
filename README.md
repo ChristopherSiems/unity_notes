@@ -27,10 +27,13 @@ decentralized peer-to-peer platform-agnostic community notes
 ```json
 {
   "type": "ips_response",
-  "ip hash pairs": [
-    "ip1": <hash as 128-bit int>,
+  "ip_hash_mappings": {
+    "ip1": [
+      <hash as 128-bit int>,
+      ...
+    ],
     ...
-  ]
+  }
 }
 ```
 

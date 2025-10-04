@@ -9,13 +9,13 @@ if __name__ == "__main__":
     socket = socket(AF_INET, SOCK_STREAM)
     socket.connect((SERVER_NAME, SERVER_PORT))
 
-    request_type = input("add or get: ")
+    request_type = input("add_note or get_ips: ")
     socket.send(
-        dumps({"type": request_type, "statement": input("input: ")}).encode("UTF-8")
+        dumps({"type": request_type, "statement": input(
+            "statement: ")}).encode("UTF-8")
     )
 
-    match request_type:
-        case "get":
-            print(socket.recv(BUFFER_SIZE).decode("UTF-8"))
+    if request_type == "get_ips":
+        print(socket.recv(BUFFER_SIZE).decode("UTF-8"))
 
     socket.close()
