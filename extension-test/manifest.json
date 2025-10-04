@@ -1,19 +1,30 @@
 {
-    "manifest_version": 3,
-    "name": "Highlight Popup Example",
-    "version": "1.0",
-    "description": "Right-click highlighted text to show popup above selection.",
-    "permissions": ["contextMenus", "scripting", "activeTab"],
-    "host_permissions": ["<all_urls>"],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
-      }
-    ],
-    "icons": {
+  "manifest_version": 3,
+  "name": "Gemma Inline Assistant",
+  "version": "1.0",
+  "description": "Right-click any text to get an inline Gemma model response.",
+  "permissions": ["contextMenus", "scripting", "activeTab"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
     }
-  }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/gemma-3n-E4B-it-int4-Web.litertlm",
+        "assets/wasm/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://cdn.jsdelivr.net"
+  },
+  "host_permissions": ["<all_urls>"]
+}

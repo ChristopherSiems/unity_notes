@@ -8,3 +8,8 @@ env/
 *venv
 .env
 qdrant_storage/
+*.litertlm
+
+*.json
+*.wasm
+*.map
