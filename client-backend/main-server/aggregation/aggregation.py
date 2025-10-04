@@ -14,7 +14,7 @@ class AggregationAgent:
     def __init__(self): 
         self.summarizer = Gemini(
             prompt = """You will be provided with a collection of community notes regarding a topic. 
-            succicntly summarize the notes to capture the key points brought up across the notes. 
+            succinctly summarize the notes to capture the key points brought up across the notes. 
             Output just a summary of {length} words or less. Community notes: {notes}, original statement: {statement}. 
             """
         )
