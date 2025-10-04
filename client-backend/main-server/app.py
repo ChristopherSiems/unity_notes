@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_cors import CORS
-from db.models import db_session, NoteManager
 import os
+
+from db.models import NoteManager, db_session
+from flask import (Flask, flash, jsonify, redirect, render_template, request,
+                   url_for)
+from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -9,7 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/api/notes', methods=['POST'])
+@app.route("/api/notes", methods=["POST"])
 def add_note():
     """
     Add a new note
@@ -19,46 +21,46 @@ def add_note():
         "statement": "Statement to hash"
     }
     """
-    with db_session() as session: 
+    with db_session() as session:
         try:
             data = request.get_json()
-            
+
             if not data:
-                return jsonify({'error': 'No data provided'}), 400
-            
-            note = data.get('note')
-            statement = data.get('statement')
-            
+                return jsonify({"error": "No data provided"}), 400
+
+            note = data.get("note")
+            statement = data.get("statement")
+
             if not note or not statement:
-                return jsonify({'error': 'Both "note" and "statement" fields are required'}), 400
-            
+                return (
+                    jsonify(
+                        {"error": 'Both "note" and "statement" fields are required'}
+                    ),
+                    400,
+                )
+
             note_manager = NoteManager(session)
             note_manager.create(note, statement)
-            
-            return jsonify({
-                'message': 'Note created successfully',
-                'note': note
-            }), 201
-            
+
+            return jsonify({"message": "Note created successfully", "note": note}), 201
+
         except Exception as e:
             session.rollback()
-            return jsonify({'error': str(e)}), 500
+            return jsonify({"error": str(e)}), 500
 
 
-@app.route('/api/note/<string:hash_val>', methods=['GET'])
+@app.route("/api/note/<string:hash_val>", methods=["GET"])
 def get_note_by_hash(hash_val):
     """Request a community overview"""
     try:
-        return jsonify({
-                'note': "test note"
-            }), 201
-            
+        return jsonify({"note": "test note"}), 201
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/api/summary', methods=['POST'])
-def add_note():
+
+@app.route("/api/summary", methods=["POST"])
+def get_summary():
     """
     Get summary for statement
     Expected JSON body:
@@ -69,24 +71,21 @@ def add_note():
 
     try:
         data = request.get_json()
-        
+
         if not data:
-            return jsonify({'error': 'No data provided'}), 400
-        
-        
-        statement = data.get('statement')
-        
-        #get summary
-        
-        return jsonify({
-            'summary': "default summary"
-        }), 201
-        
+            return jsonify({"error": "No data provided"}), 400
+
+        statement = data.get("statement")
+
+        # get summary
+
+        return jsonify({"summary": "default summary"}), 201
+
     except Exception as e:
 
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
 
 # Main entry point
-if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=5000)
+if __name__ == "__main__":
+    app.run(debug=True, host="localhost", port=5000)
