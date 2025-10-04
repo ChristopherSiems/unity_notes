@@ -123,7 +123,6 @@ def view_all_data():
     print(f"Collection: {COLLECTION_NAME}")
     print(f"Total points: {collection_info.points_count}")
     print(f"Vector size: {collection_info.config.params.vectors.size}")
-    print("\n" + "="*50)
     
     # Scroll through all points
     points = qdrant_client.scroll(
@@ -141,6 +140,41 @@ def view_all_data():
         print(f"  IP Addresses ({len(ip_list)}): {', '.join(ip_list)}")
         print()
 
+def extract_facts(query_text):
+    """
+    Use Gemini to extract factual claims from noisy text.
+    Handles multiple facts in a single query.
+    
+    Args:
+        query_text: Raw text that may contain opinions, noise, and multiple facts
+    
+    Returns:
+        List of extracted factual claims (strings)
+    """
+    prompt = f"""Extract all factual claims, true or false, from the following text. 
+Return each fact as a separate line, with no numbering or bullets.
+Do not change the text whatsoever, just ignore noise.
+If there are no facts, return "NO_FACTS".
+
+Text: {query_text}
+
+Facts:"""
+    
+    response = genai_client.models.generate_content(
+        model="gemini-2.0-flash-exp",
+        contents=prompt
+    )
+    
+    # Parse response into list of facts
+    facts_text = response.text.strip()
+    
+    if facts_text == "NO_FACTS" or not facts_text:
+        return []
+    
+    # Split by newlines and clean up
+    facts = [fact.strip() for fact in facts_text.split('\n') if fact.strip()]
+    print(facts)
+    return facts
 
 def search_similar_texts(query_text, score_threshold=0.7):
     """
@@ -154,43 +188,45 @@ def search_similar_texts(query_text, score_threshold=0.7):
     Returns:
         List of search results with text, IP addresses, and similarity score
     """
-    # Get embedding for search query
-    query_vector = get_embedding(query_text)
-    
-    # Search in Qdrant with score filtering
-    hits = qdrant_client.search(
-        collection_name=COLLECTION_NAME,
-        query_vector=query_vector,
-        limit=100,
-        score_threshold=score_threshold
-    )
-    
-    # Format and return results
     results = []
-    for hit in hits:
-        results.append({
-            "id": hit.id,
-            "score": hit.score,
-            "text": hit.payload.get("text"),
-            "ip_list": hit.payload.get("ip_list", [])
-        })
+    for fact in extract_facts(query_text):
+    # Get embedding for search query
+        query_vector = get_embedding(fact)
+        
+        # Search in Qdrant with score filtering
+        hits = qdrant_client.search(
+            collection_name=COLLECTION_NAME,
+            query_vector=query_vector,
+            limit=100,
+            score_threshold=score_threshold
+        )
+        
+        # Format and return results
+        for hit in hits:
+            results.append({
+                "id": hit.id,
+                "score": hit.score,
+                "text": hit.payload.get("text"),
+                "ip_list": hit.payload.get("ip_list", [])
+            })
     
     return results
 
 
 def test():
-    add_text_with_ip("the earth is flat", "192.168.1.100")
-    add_text_with_ip("the earth is round", "10.0.0.45")
-    add_text_with_ip("our planet is spherical", "172.16.0.200")
-    add_text_with_ip("the earth is flat", "203.0.113.50")  # Same text, different IP
-    add_text_with_ip("pizza is delicious", "192.168.1.100")
-    add_text_with_ip("the earth is flat", "198.51.100.75")  # Same text again!
-    add_text_with_ip("the moon orbits earth", "10.0.0.87")
-    add_text_with_ip("the earth is flat", "192.168.1.100")  # Duplicate IP - won't add
+    #add_text_with_ip("Fortnite came out in 2017.", "192.168.1.100")
+    #add_text_with_ip("the earth is flat", "192.168.1.100")
+    #add_text_with_ip("the earth is round", "10.0.0.45")
+    #add_text_with_ip("our planet is spherical", "172.16.0.200")
+    #add_text_with_ip("the earth is flat", "203.0.113.50")  # Same text, different IP
+    #add_text_with_ip("pizza is delicious", "192.168.1.100")
+    #add_text_with_ip("the earth is flat", "198.51.100.75")  # Same text again!
+    #add_text_with_ip("the moon orbits earth", "10.0.0.87")
+    #add_text_with_ip("the earth is flat", "192.168.1.100")  # Duplicate IP - won't add
+    return
     
 # Example usage
 if __name__ == "__main__":
-    
     #print("VIEWING ALL STORED DATA")
     #view_all_data()
     
@@ -198,7 +234,7 @@ if __name__ == "__main__":
     #print("SEARCHING FOR SIMILAR TEXTS (Score >= 0.7)")
     
     # Step 3: Search for similar texts
-    query = "the earth is actually flat"
+    query = "Fortnite was released in 2018 and the earth is flat."
     print(f"Query: '{query}'\n")
     
     results = search_similar_texts(query, score_threshold=0.7)
