@@ -17,6 +17,7 @@ class AggregationAgent:
             Succinctly summarize the notes to comprehensively capture the key points brought up across the notes. Emphasize repeated points and do not preface the summary with any introduction.
             Output only a summary of {length} words or less. Community notes: {notes}, statement: {statement}. 
             Only use information from the notes to create the summary.
+            If there are no notes, return "No community context for this statement."
             """
         )
 
@@ -34,6 +35,8 @@ class AggregationAgent:
 
     def summarize(self, notes: list[str],statement: str,  max_size:int, output_size:int) -> str: 
         #if number of notes is below threshold, just summarize
+        if notes is None or len(notes) == 0: 
+            return "No community context for this statement."
         if len(notes) < max_size: 
             output = self.summarizer.run({"notes": notes, "statement": statement, "length": output_size})
             return output
