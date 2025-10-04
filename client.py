@@ -1,7 +1,9 @@
 from asyncio import (DatagramProtocol, DatagramTransport, Future, TimeoutError,
                      gather, get_running_loop, wait_for)
 from json import dumps, loads
-from socket import AF_INET, SOCK_DGRAM, SOCK_STREAM, socket
+from socket import AF_INET, SOCK_STREAM, socket
+
+from
 
 BUFFER_SIZE = 4096
 CLIENT_PORT = 13000
@@ -14,8 +16,6 @@ class PeerListener(DatagramProtocol):
         self.transport = transport
 
     def datagram_received(self, data, addr):
-        # QUERY FOR NOTES FROM LOCAL DB
-        pass
 
 
 class PeerMessenger(DatagramProtocol):
@@ -31,11 +31,11 @@ class PeerMessenger(DatagramProtocol):
         self.on_response.set_result(loads(data.decode("UTF-8")))
 
 
-async def peer_request(ip: str, id: int, timeout: float) -> str | None:
+async def peer_request(ip: str, ids: list[int], timeout: float) -> str | None:
     loop = get_running_loop()
     future = loop.create_future()
     transport, _ = await loop.create_datagram_endpoint(
-        lambda: PeerMessenger(str(id), future), remote_addr=(ip, CLIENT_PORT)
+        lambda: PeerMessenger(str({"type": "peer_request", "ids": ids}), future), remote_addr=(ip, CLIENT_PORT)
     )
 
     try:
@@ -46,8 +46,12 @@ async def peer_request(ip: str, id: int, timeout: float) -> str | None:
         transport.close()
 
 
-async def parallel_peer_requests(ips: list[str], ids: list[int], timeout: float):
-    return await gather(*[peer_request(ip, id, timeout) for ip, id in zip(ips, ids)])
+async def parallel_peer_requests(server_response, timeout: float):
+    coroutines = []
+    for ip, ids in server_response["ips"].items():
+        coroutines.append(peer_request(ip, ids, timeout))
+
+    return await gather(*coroutines)
 
 
 def add_note(statement: str) -> None:
