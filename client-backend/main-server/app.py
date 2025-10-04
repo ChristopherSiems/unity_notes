@@ -1,6 +1,7 @@
 import os
 
 from db.models import NoteManager, db_session
+from socket_util.manager import SocketManager
 from flask import (Flask, flash, jsonify, redirect, render_template, request,
                    url_for)
 from flask_cors import CORS
@@ -41,6 +42,8 @@ def add_note():
 
             note_manager = NoteManager(session)
             note_manager.create(note, statement)
+            SocketManager.add_statement_to_central(statement)
+            
 
             return jsonify({"message": "Note created successfully", "note": note}), 201
 
