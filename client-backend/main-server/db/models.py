@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import xxhash
+from xxhash import xxh128_intdigest
 from contextlib import contextmanager
 
 # Create base class for declarative models
@@ -24,9 +24,7 @@ class NoteManager:
         self.session = session
     
     def create(self, note:str, statement: str) -> None:
-        x = xxhash.xxh32() 
-        x.update(statement)
-        hash_val = x.hexdigest()
+        hash_val = xxh128_intdigest(statement)
         note = Notes(hash = hash_val, note = note)
         self.session.add(note)
         self.session.commit()
