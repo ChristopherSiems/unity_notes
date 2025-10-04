@@ -2,7 +2,7 @@ import asyncio
 from asyncio import Future, TimeoutError, gather, get_running_loop, wait_for
 from json import dumps, loads
 
-from client import CLIENT_PORT, PeerMessenger
+from client1 import CLIENT_PORT, PeerMessenger
 
 LISTENER_IP = "127.0.0.1"  # where your PeerListener is running
 

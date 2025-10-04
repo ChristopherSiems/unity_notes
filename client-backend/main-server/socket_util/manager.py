@@ -1,7 +1,7 @@
 from xxhash import xxh64_intdigest
 from json import dumps, loads
 from socket import AF_INET, SOCK_STREAM, socket
-from client import parallel_peer_requests
+from client1 import parallel_peer_requests
 BUFFER_SIZE = 4096
 SERVER_PORT = 12000
 SERVER_NAME = "172.20.10.11"
