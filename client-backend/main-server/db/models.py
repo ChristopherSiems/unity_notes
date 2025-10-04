@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from xxhash import xxh128_intdigest
+from xxhash import xxh64_intdigest
 from contextlib import contextmanager
 
 # Create base class for declarative models
@@ -24,10 +24,14 @@ class NoteManager:
         self.session = session
     
     def create(self, note:str, statement: str) -> None:
-        hash_val = xxh128_intdigest(statement)
+        hash_val = str(xxh64_intdigest(statement))
         note = Notes(hash = hash_val, note = note)
         self.session.add(note)
         self.session.commit()
+
+    def get_notes_by_hash(self, hash_v:str) -> list:
+        """Return all notes that match the hash of the given statement."""
+        return self.session.query(Notes).filter_by(hash=hash_v).all()
 
 
 
@@ -59,8 +63,8 @@ def db_session():
 
 
 if __name__ == "__main__":
-    # init_db()
+    init_db()
     with db_session() as session: 
         
-        NoteManager(session = session).create('a', 'hello foef')
+        NoteManager(session = session).create('the earth is flat', 'it is not flat')
     
