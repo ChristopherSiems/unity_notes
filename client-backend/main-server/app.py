@@ -58,7 +58,7 @@ def get_note_by_hash(hash_val):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/summary', methods=['POST'])
-def add_note():
+def add_sum():
     """
     Get summary for statement
     Expected JSON body:
@@ -75,11 +75,13 @@ def add_note():
         
         
         statement = data.get('statement')
+
+        dummy_summary = f"Dummy summary for: {statement}"
         
         #get summary
         
         return jsonify({
-            'summary': "default summary"
+            'summary': dummy_summary
         }), 201
         
     except Exception as e:
