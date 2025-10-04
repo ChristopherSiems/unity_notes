@@ -45,7 +45,7 @@ def add_note():
             return jsonify({'error': str(e)}), 500
 
 
-@app.route('/api/overview/<string:hash_val>', methods=['GET'])
+@app.route('/api/note/<string:hash_val>', methods=['GET'])
 def get_note_by_hash(hash_val):
     """Request a community overview"""
     try:
