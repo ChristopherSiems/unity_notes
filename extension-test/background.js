@@ -38,3 +38,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     chrome.tabs.sendMessage(tab.id, { selectedText: text, response });
   }
 });
+
+// chrome.runtime.onInstalled.addListener(() => {
+//   console.log("Gemma Inline Assistant installed!");
+// });

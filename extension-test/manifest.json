@@ -5,8 +5,7 @@
   "description": "Right-click any text to get an inline Gemma model response.",
   "permissions": ["contextMenus", "scripting", "activeTab"],
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
