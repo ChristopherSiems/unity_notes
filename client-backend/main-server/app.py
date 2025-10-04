@@ -49,8 +49,10 @@ def add_note():
 def get_note_by_hash(hash_val):
     """Request a community overview"""
     try:
-        #get overview
-        pass
+        return jsonify({
+                'note': "test note"
+            }), 201
+            
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
