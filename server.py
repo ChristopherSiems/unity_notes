@@ -1,21 +1,16 @@
 from json import dumps, loads
 from socket import AF_INET, SOCK_STREAM, socket
 
-from vectordb import (add_text_with_ip, search_similar_texts, setup_collection,
-                      view_all_data)
+from vectordb import add_text_with_ip, search_similar_texts
 
 BUFFER_SIZE = 4096
 SERVER_PORT = 12000
 
 if __name__ == "__main__":
 
-    # setup_collection()
-
     socket = socket(AF_INET, SOCK_STREAM)
     socket.bind(("", SERVER_PORT))
     socket.listen(1)
-
-    table = {}
 
     print("server ready")
     while True:
@@ -27,6 +22,7 @@ if __name__ == "__main__":
             case "add_note":
                 print("add", payload)
                 add_text_with_ip(statement, addr[0])
+                connection.send("OK".encode("UTF-8"))
 
             case "get_ips":
                 print("get", payload)
@@ -35,7 +31,7 @@ if __name__ == "__main__":
                 ip_mappings = {}
                 for entry in entries:
                     id = entry["id"]
-                    for ip in entry["ip_addresses"]:
+                    for ip in entry["ip_list"]:
                         if ip not in ip_mappings:
                             ip_mappings[ip] = []
                         ip_mappings[ip].append(id)
