@@ -9,6 +9,7 @@ from socket import AF_INET, SOCK_STREAM, socket
 BUFFER_SIZE = 4096
 SERVER_PORT = 12000
 SERVER_NAME = "172.20.10.11"
+CLIENT_PORT = 13000  # port this peer listens on
 class SocketManager: 
 
     def __init__(self): 
@@ -26,11 +27,13 @@ class SocketManager:
             dumps({"type": "get_ips", "statement": statement}).encode("UTF-8")
         )
         ips = loads(server_socket.recv(BUFFER_SIZE).decode("UTF-8"))
+        print("ips", ips)
         server_socket.close()
         if ips: 
+            print("ips found")
             notes = parallel_peer_requests(ips, 15)
         
-        
+        print
         return notes
     
     def add_statement_to_central(statement:str) -> None: 
@@ -68,7 +71,7 @@ async def peer_request(ip: str, ids: list[str], timeout: float) -> list | None:
     loop = get_running_loop()
     future = loop.create_future()
     message = dumps({"type": "peer_request", "ids": ids})
-
+    print("message", message)
     transport, _ = await loop.create_datagram_endpoint(
         lambda: PeerMessenger(message, future), remote_addr=(ip, CLIENT_PORT)
     )
@@ -76,14 +79,16 @@ async def peer_request(ip: str, ids: list[str], timeout: float) -> list | None:
     try:
         return await wait_for(future, timeout)
     except TimeoutError:
+        print("timeout")
         return None
     finally:
         transport.close()
 
 async def parallel_peer_requests(server_response: dict, timeout: float):
+    print("server_response", server_response)
     coroutines = [
         peer_request(ip, ids, timeout)
-        for ip, ids in server_response.get("ips", {}).items()
+        for ip, ids in server_response.get('ip_hash_mappings', {}).items()
     ]
     return await gather(*coroutines, return_exceptions=True)
 

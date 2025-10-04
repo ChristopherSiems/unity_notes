@@ -69,7 +69,7 @@ def get_note_by_hash(hash_val):
 
 
 @app.route("/api/summary", methods=["POST"])
-def get_summary():
+async def get_summary():
     """
     Get summary for statement
     Expected JSON body:
@@ -87,8 +87,9 @@ def get_summary():
         statement = data.get("statement")
         socket_manager = SocketManager()
         
-        out = socket_manager.get_notes(statement)
+        out = await socket_manager.get_notes(statement)
         print("yabayda", out)
+        print(jsonify({"summary": out}))
 
         # get summary
 
