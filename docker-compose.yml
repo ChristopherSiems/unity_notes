@@ -10,4 +10,3 @@ services:
       - "6334:6334"   # gRPC (optional)
     volumes:
       - ./server_backend/qdrant_storage:/qdrant/storage
-
