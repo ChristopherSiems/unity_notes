@@ -2,9 +2,11 @@ import asyncio
 from asyncio import (DatagramProtocol, DatagramTransport, Future, Queue,
                      TimeoutError, gather, get_running_loop, wait_for)
 from json import dumps, loads
+from socket import AF_INET, SOCK_STREAM, socket
 
 from aiohttp import ClientSession
 
+BUFFER_SIZE = 4096
 CLIENT_PORT = 13000  # port this peer listens on
 SERVER_PORT = 12000
 SERVER_NAME = "localhost"
@@ -72,7 +74,7 @@ class PeerMessenger(DatagramProtocol):
             self.transport.close()
 
 
-async def peer_request(ip: str, ids: list[int], timeout: float) -> list | None:
+async def peer_request(ip: str, ids: list[str], timeout: float) -> list | None:
     """Send a peer request and wait for response."""
     loop = get_running_loop()
     future = loop.create_future()
