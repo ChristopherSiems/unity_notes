@@ -3,3 +3,8 @@
 
 *__pychach
 *.pyc
+.python-version
+env/
+*venv
+.env
+qdrant_storage/
