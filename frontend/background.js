@@ -194,37 +194,44 @@ async function showSummaryPopup(selectedText) {
     const range = selection.getRangeAt(0);
     const rect = range.getBoundingClientRect();
 
+    // Highlight the selection
     const highlightSpan = document.createElement("span");
     highlightSpan.style.backgroundColor = "#9b8cff";
     highlightSpan.style.borderRadius = "3px";
     highlightSpan.classList.add("temporary-highlight");
 
-    // Extract selection contents (preserves nested tags like <b>, <i>)
     const contents = range.extractContents();
-
-    // Put the contents inside the span
     highlightSpan.appendChild(contents);
-
-    // Insert span back into the document
     range.insertNode(highlightSpan);
-
     selection.removeAllRanges();
 
+    // Remove old popup if present
     let popup = document.getElementById("summary-popup-ext");
     if (popup) popup.remove();
 
+    // Create popup with spinner
     popup = document.createElement("div");
     popup.id = "summary-popup-ext";
     popup.innerHTML = `
-        <h3 style="margin-top: 8px; text-align: center; font-size: 16px; color: #333;">Community Context</h3>
+        <h3 style="margin-top: 8px; text-align: center; font-size: 16px; color: #333;">
+          Community Context
+        </h3>
         <div id="summaryContent" style="
-            font-size: 14px;
-            text-align: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
             width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-        ">Loading notes...</div>
+        ">
+            <div class="loading-spinner" style="
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #4f46e5;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                animation: spin 1s linear infinite;
+            "></div>
+        </div>
     `;
 
     Object.assign(popup.style, {
@@ -243,24 +250,17 @@ async function showSummaryPopup(selectedText) {
 
     document.body.appendChild(popup);
 
-    // Fetch summary
-    try {
-        const response = await fetch("http://localhost:5000/api/summary", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ statement: selectedText })
-        });
+    // Add CSS animation for spinner
+    const styleTag = document.createElement("style");
+    styleTag.textContent = `
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(styleTag);
 
-        const data = await response.json();
-        const summaryDiv = popup.querySelector("#summaryContent");
-        summaryDiv.textContent = data.summary;
-    } catch (err) {
-        const summaryDiv = popup.querySelector("#summaryContent");
-        summaryDiv.textContent = `Error fetching summary: ${err}`;
-        summaryDiv.style.color = "red";
-    }
-
-    // **Position popup after content is loaded**
+    // Position popup immediately
     const gap = 8;
     const popupHeight = popup.offsetHeight;
     let top = rect.top + window.scrollY - popupHeight - gap;
@@ -270,11 +270,32 @@ async function showSummaryPopup(selectedText) {
     popup.style.top = `${top}px`;
     popup.style.left = `${rect.left + window.scrollX}px`;
 
+    // Fetch summary in background
+    try {
+        const response = await fetch("http://localhost:5000/api/summary", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ statement: selectedText })
+        });
+
+        const data = await response.json();
+        const summaryDiv = popup.querySelector("#summaryContent");
+        summaryDiv.style.display = "block";
+        summaryDiv.style.textAlign = "left";
+        summaryDiv.style.height = "auto";
+        summaryDiv.textContent = data.summary;
+    } catch (err) {
+        const summaryDiv = popup.querySelector("#summaryContent");
+        summaryDiv.textContent = `Error fetching summary: ${err}`;
+        summaryDiv.style.color = "red";
+    }
+
+    // Close on outside click
     function handleClickOutside(event) {
         if (!popup.contains(event.target)) {
-        popup.remove();
-        highlightSpan.replaceWith(...highlightSpan.childNodes);
-        document.removeEventListener("mousedown", handleClickOutside);
+            popup.remove();
+            highlightSpan.replaceWith(...highlightSpan.childNodes);
+            document.removeEventListener("mousedown", handleClickOutside);
         }
     }
     document.addEventListener("mousedown", handleClickOutside);
