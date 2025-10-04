@@ -29,10 +29,9 @@ class NoteManager:
         self.session.add(note)
         self.session.commit()
 
-    def get_notes_by_hash(self, statement: str) -> list:
+    def get_notes_by_hash(self, hash_v:str) -> list:
         """Return all notes that match the hash of the given statement."""
-        hash_val = str(xxh64_intdigest(statement))
-        return self.session.query(Notes).filter_by(hash=hash_val).all()
+        return self.session.query(Notes).filter_by(hash=hash_v).all()
 
 
 
