@@ -24,14 +24,14 @@ class NoteManager:
         self.session = session
     
     def create(self, note:str, statement: str) -> None:
-        hash_val = xxh64_intdigest(statement)
+        hash_val = str(xxh64_intdigest(statement))
         note = Notes(hash = hash_val, note = note)
         self.session.add(note)
         self.session.commit()
 
     def get_notes_by_hash(self, statement: str) -> list:
         """Return all notes that match the hash of the given statement."""
-        hash_val = xxh64_intdigest(statement)
+        hash_val = str(xxh64_intdigest(statement))
         return self.session.query(Notes).filter_by(hash=hash_val).all()
 
 
