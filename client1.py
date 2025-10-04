@@ -34,6 +34,7 @@ class PeerListener(DatagramProtocol):
             message = loads(data.decode("UTF-8"))
             ids = message.get("ids", [])
             notes = []
+            print('message', message)
 
             for note_id in ids:
                 try:
@@ -41,6 +42,7 @@ class PeerListener(DatagramProtocol):
                         f"http://localhost:5000/api/note/{note_id}"
                     ) as resp:
                         notes.append(await resp.json())
+                    print('notes', notes)
                 except Exception as e:
                     notes.append({"id": note_id, "error": str(e)})
 
