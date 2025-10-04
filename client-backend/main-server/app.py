@@ -44,18 +44,21 @@ def add_note():
             session.rollback()
             return jsonify({'error': str(e)}), 500
 
-
 @app.route('/api/note/<string:hash_val>', methods=['GET'])
 def get_note_by_hash(hash_val):
-    """Request a community overview"""
+    """Get all notes for a given hash"""
     try:
-        return jsonify({
-                'note': "test note"
-            }), 201
+        with db_session() as session: 
+            note_manager = NoteManager(session)
+            notes = note_manager.get_notes_by_hash(hash_val)
             
+            notes_list = [n.note for n in notes]
+
+        return jsonify({'notes': notes_list}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
 
 @app.route('/api/summary', methods=['POST'])
 def add_note():

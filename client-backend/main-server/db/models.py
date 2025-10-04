@@ -29,6 +29,11 @@ class NoteManager:
         self.session.add(note)
         self.session.commit()
 
+    def get_notes_by_hash(self, statement: str) -> list:
+        """Return all notes that match the hash of the given statement."""
+        hash_val = xxh128_intdigest(statement)
+        return self.session.query(Notes).filter_by(hash=hash_val).all()
+
 
 
 # Database initialization
