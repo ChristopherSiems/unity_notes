@@ -154,7 +154,7 @@ def extract_facts(query_text):
     prompt = f"""Extract all factual claims, true or false, from the following text. 
 Return each fact as a separate line, with no numbering or bullets.
 Do not change the text whatsoever, just ignore noise.
-If there are no facts, return "NO_FACTS".
+Do not return an empty list, if there are no facts just return what was inputted on a single line.
 
 Text: {query_text}
 

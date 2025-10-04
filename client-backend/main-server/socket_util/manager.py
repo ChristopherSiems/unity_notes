@@ -4,7 +4,7 @@ from socket import AF_INET, SOCK_STREAM, socket
 
 BUFFER_SIZE = 4096
 SERVER_PORT = 12000
-SERVER_NAME = "10.253.19.69"
+SERVER_NAME = "172.20.10.11"
 class SocketManager: 
 
     def __init__(self): 
