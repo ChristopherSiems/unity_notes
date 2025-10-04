@@ -7,7 +7,7 @@ import os
 load_dotenv()
 
 # Access the key
-api_key = os.getenv("GOOGLE_API_KEY")
+api_key = os.getenv("GEMINI_API_KEY")
 
 class AggregationAgent: 
 
