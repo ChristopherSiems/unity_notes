@@ -253,7 +253,7 @@ async function showSummaryPopup(selectedText) {
 
         const data = await response.json();
         const summaryDiv = popup.querySelector("#summaryContent");
-        summaryDiv.textContent = data.summary || "No summary available.";
+        summaryDiv.textContent = data.summary;
     } catch (err) {
         const summaryDiv = popup.querySelector("#summaryContent");
         summaryDiv.textContent = `Error fetching summary: ${err}`;

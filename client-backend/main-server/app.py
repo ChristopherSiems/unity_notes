@@ -88,11 +88,11 @@ def get_summary():
         socket_manager = SocketManager()
         
         out = socket_manager.get_notes(statement)
-        print(out)
+        print("yabayda", out)
 
         # get summary
 
-        return jsonify({"summary": "default summary"}), 201
+        return jsonify({"summary": out}), 201
 
     except Exception as e:
 

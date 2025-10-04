@@ -214,15 +214,16 @@ def search_similar_texts(query_text, score_threshold=0.7):
 
 
 def test():
-    #add_text_with_ip("Fortnite came out in 2017.", "192.168.1.100")
-    #add_text_with_ip("the earth is flat", "192.168.1.100")
-    #add_text_with_ip("the earth is round", "10.0.0.45")
-    #add_text_with_ip("our planet is spherical", "172.16.0.200")
-    #add_text_with_ip("the earth is flat", "203.0.113.50")  # Same text, different IP
-    #add_text_with_ip("pizza is delicious", "192.168.1.100")
-    #add_text_with_ip("the earth is flat", "198.51.100.75")  # Same text again!
-    #add_text_with_ip("the moon orbits earth", "10.0.0.87")
-    #add_text_with_ip("the earth is flat", "192.168.1.100")  # Duplicate IP - won't add
+    add_text_with_ip("Fortnite came out in 2017.", "192.168.1.100")
+    add_text_with_ip("the earth is flat", "192.168.1.100")
+    add_text_with_ip("the earth is round", "10.0.0.45")
+    add_text_with_ip("our planet is spherical", "172.16.0.200")
+    add_text_with_ip("the earth is flat", "203.0.113.50")  # Same text, different IP
+    add_text_with_ip("pizza is delicious", "192.168.1.100")
+    add_text_with_ip("the earth is flat", "198.51.100.75")  # Same text again!
+    add_text_with_ip("the moon orbits earth", "10.0.0.87")
+    add_text_with_ip("the earth is flat", "192.168.1.100")  # Duplicate IP - won't add
+    add_text_with_ip("Chris siems likes women?", "192.168.1.100")
     return
     
 # Example usage
@@ -230,7 +231,7 @@ if __name__ == "__main__":
     #print("VIEWING ALL STORED DATA")
     #view_all_data()
     
-    #test()
+    test()
     #print("SEARCHING FOR SIMILAR TEXTS (Score >= 0.7)")
     
     # Step 3: Search for similar texts
