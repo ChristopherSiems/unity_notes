@@ -1,29 +1,32 @@
+
 {
   "manifest_version": 3,
-  "name": "Gemma Inline Assistant",
+  "name": "Gemma Definition Helper",
   "version": "1.0",
-  "description": "Right-click any text to get an inline Gemma model response.",
-  "permissions": ["contextMenus", "scripting", "activeTab"],
+  "description": "Get AI-powered definitions using Gemma 3 270M",
+  "permissions": [
+    "contextMenus",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": [
-        "assets/gemma-3n-E4B-it-int4-Web.litertlm",
-        "assets/wasm/*"
-      ],
+      "resources": ["offscreen.html", "offscreen.js"],
       "matches": ["<all_urls>"]
     }
-  ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://cdn.jsdelivr.net"
-  },
-  "host_permissions": ["<all_urls>"]
+  ]
 }
+
+
