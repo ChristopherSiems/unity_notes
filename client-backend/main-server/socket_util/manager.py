@@ -1,7 +1,7 @@
 from xxhash import xxh64_intdigest
 from json import dumps, loads
 from socket import AF_INET, SOCK_STREAM, socket
-
+from client import parallel_peer_requests
 BUFFER_SIZE = 4096
 SERVER_PORT = 12000
 SERVER_NAME = "172.20.10.11"
@@ -23,7 +23,11 @@ class SocketManager:
         )
         ips = loads(server_socket.recv(BUFFER_SIZE).decode("UTF-8"))
         server_socket.close()
-        return ips
+        if ips: 
+            notes = parallel_peer_requests(ips, 15)
+        
+        
+        return notes
     
     def add_statement_to_central(statement:str) -> None: 
         server_socket = socket(AF_INET, SOCK_STREAM)
