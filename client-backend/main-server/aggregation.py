@@ -13,17 +13,22 @@ class AggregationAgent:
 
     def __init__(self): 
         self.summarizer = Gemini(
-            prompt = """You will be provided with a collection of community notes regarding a topic. 
-            succinctly summarize the notes to capture the key points brought up across the notes. 
-            Output just a summary of {length} words or less. Community notes: {notes}, original statement: {statement}. 
+            prompt = """You will be provided with a collection of community notes regarding a topic from a statement that someone is seeking context for. 
+            Succinctly summarize the notes to comprehensively capture the key points brought up across the notes. Emphasize and prioritize repeated points.
+            Do not preface the summary with anything such as "the notes say".
+            Output only a summary of {length} words or less. Community notes: {notes}, statement: {statement}. 
+            Only use information from the notes that is relevant to the statement to create the summary.
+            If there are no notes, return "No community context for this statement."
             """
         )
 
         self.aggregator = Gemini(
             prompt = """you will be provided with a group of summaries.
-              Your role is to summarize the collections of summaries into a single summary. 
-               ensure that all key points made in the original companies are kept in the new summaries.
-               The summary should be 50 words or less.  
+              Your role is to succinctly and comprehensively summarize the collections of summaries into a single summary. 
+               ensure that all key points made in the individual summaries are captured in the new summary.
+                Emphasize and prioritize key points that are repeated across multiple summaries.
+                Do not preface the new summary with any introduction.
+               The summary should be 50 words or less and only include information from the other summaries.  
                return just the new summary. 
                summaries to summarize: {summaries}
              """
@@ -33,6 +38,8 @@ class AggregationAgent:
 
     def summarize(self, notes: list[str],statement: str,  max_size:int, output_size:int) -> str: 
         #if number of notes is below threshold, just summarize
+        if notes is None or len(notes) == 0: 
+            return "No community context for this statement."
         if len(notes) < max_size: 
             output = self.summarizer.run({"notes": notes, "statement": statement, "length": output_size})
             return output

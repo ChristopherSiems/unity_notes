@@ -153,7 +153,7 @@ def extract_facts(query_text):
     """
     prompt = f"""Extract all factual claims, true or false, from the following text. 
 Return each fact as a separate line, with no numbering or bullets.
-Do not change the text whatsoever, just ignore noise.
+Do not change the wording of any text whatsoever, just ignore remove noise. For example phrases like "as well" or "I think" should be removed.
 Do not return an empty list, if there are no facts just return what was inputted on a single line.
 
 Text: {query_text}
@@ -231,11 +231,11 @@ if __name__ == "__main__":
     #print("VIEWING ALL STORED DATA")
     #view_all_data()
     
-    test()
+    #test()
     #print("SEARCHING FOR SIMILAR TEXTS (Score >= 0.7)")
     
     # Step 3: Search for similar texts
-    query = "Fortnite was released in 2018 and the earth is flat."
+    query = "Hello! Fortnite was released in 2018 and the funny thing is the earth is flat and interestingyl Mitt Romney was a bad guy. Very cool by the way, we will see Halloween appear on Friday the 13th."
     print(f"Query: '{query}'\n")
     
     results = search_similar_texts(query, score_threshold=0.7)
