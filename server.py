@@ -1,7 +1,7 @@
 from json import dumps, loads
 from socket import AF_INET, SOCK_STREAM, socket
 
-from vectordb import add_text_with_ip, search_similar_texts
+from server_backend.vectordb import add_text_with_ip, search_similar_texts
 
 BUFFER_SIZE = 4096
 SERVER_PORT = 12000
@@ -28,6 +28,7 @@ if __name__ == "__main__":
                 print("get", payload)
 
                 entries = search_similar_texts(statement)
+                print(entries)
                 ip_mappings = {}
                 for entry in entries:
                     id = entry["id"]
