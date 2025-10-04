@@ -1,7 +1,11 @@
 from xxhash import xxh64_intdigest
 from json import dumps, loads
 from socket import AF_INET, SOCK_STREAM, socket
-from client1 import parallel_peer_requests
+import asyncio
+from asyncio import (DatagramProtocol, DatagramTransport, Future, Queue,
+                     TimeoutError, gather, get_running_loop, wait_for)
+from json import dumps, loads
+from socket import AF_INET, SOCK_STREAM, socket
 BUFFER_SIZE = 4096
 SERVER_PORT = 12000
 SERVER_NAME = "172.20.10.11"
@@ -38,3 +42,48 @@ class SocketManager:
         assert server_socket.recv(BUFFER_SIZE).decode("UTF-8") == "OK"
         print('statement added')
         server_socket.close()
+
+
+class PeerMessenger(DatagramProtocol):
+    """Sends a UDP message and waits for the response."""
+
+    def __init__(self, message: str, future: Future):
+        self.message = message
+        self.future = future
+        self.transport: DatagramTransport | None = None
+
+    def connection_made(self, transport: DatagramTransport):
+        self.transport = transport
+        self.transport.sendto(self.message.encode("UTF-8"))
+
+    def datagram_received(self, data, addr):
+        if not self.future.done():
+            self.future.set_result(loads(data.decode("UTF-8")))
+        if self.transport:
+            self.transport.close()
+
+
+async def peer_request(ip: str, ids: list[str], timeout: float) -> list | None:
+    """Send a peer request and wait for response."""
+    loop = get_running_loop()
+    future = loop.create_future()
+    message = dumps({"type": "peer_request", "ids": ids})
+
+    transport, _ = await loop.create_datagram_endpoint(
+        lambda: PeerMessenger(message, future), remote_addr=(ip, CLIENT_PORT)
+    )
+
+    try:
+        return await wait_for(future, timeout)
+    except TimeoutError:
+        return None
+    finally:
+        transport.close()
+
+async def parallel_peer_requests(server_response: dict, timeout: float):
+    coroutines = [
+        peer_request(ip, ids, timeout)
+        for ip, ids in server_response.get("ips", {}).items()
+    ]
+    return await gather(*coroutines, return_exceptions=True)
+
