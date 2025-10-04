@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Notes Extension",
+    "name": "Unity Notes",
     "version": "1.0",
     "description": "An extension to add and request notes from selected text.",
     "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
