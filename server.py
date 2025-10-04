@@ -36,6 +36,9 @@ if __name__ == "__main__":
                         if ip not in ip_mappings:
                             ip_mappings[ip] = []
                         ip_mappings[ip].append(id)
+
+                for key, value in ip_mappings.items():
+                    ip_mappings[key] = list(set(value))
                 print(ip_mappings)
 
                 connection.send(
@@ -44,4 +47,5 @@ if __name__ == "__main__":
                     ).encode("UTF-8")
                 )
 
+        del payload
         connection.close()

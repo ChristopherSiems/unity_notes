@@ -1,24 +1,26 @@
-from xxhash import xxh64_intdigest
-from json import dumps, loads
-from socket import AF_INET, SOCK_STREAM, socket
 import asyncio
 from asyncio import (DatagramProtocol, DatagramTransport, Future, Queue,
                      TimeoutError, gather, get_running_loop, wait_for)
 from json import dumps, loads
 from socket import AF_INET, SOCK_STREAM, socket
+
+from xxhash import xxh64_intdigest
+
 BUFFER_SIZE = 4096
 SERVER_PORT = 12000
 SERVER_NAME = "172.20.10.11"
 CLIENT_PORT = 13000  # port this peer listens on
-class SocketManager: 
 
-    def __init__(self): 
-        pass 
 
-    def get_notes(self, statement:str) -> list: 
+class SocketManager:
+
+    def __init__(self):
+        pass
+
+    def get_notes(self, statement: str) -> list:
         """
-            input: statement
-            output: list of notes related to statement
+        input: statement
+        output: list of notes related to statement
         """
 
         server_socket = socket(AF_INET, SOCK_STREAM)
@@ -29,21 +31,24 @@ class SocketManager:
         ips = loads(server_socket.recv(BUFFER_SIZE).decode("UTF-8"))
         print("ips", ips)
         server_socket.close()
-        if ips: 
+        if ips:
             print("ips found")
             notes = parallel_peer_requests(ips, 15)
-        
-        print
+
+        note_set = set()
+        for note in notes:
+            note_set.add(note["notes"][0])
+
         return notes
-    
-    def add_statement_to_central(statement:str) -> None: 
+
+    def add_statement_to_central(statement: str) -> None:
         server_socket = socket(AF_INET, SOCK_STREAM)
         server_socket.connect((SERVER_NAME, SERVER_PORT))
         server_socket.send(
             dumps({"type": "add_note", "statement": statement}).encode("UTF-8")
         )
         assert server_socket.recv(BUFFER_SIZE).decode("UTF-8") == "OK"
-        print('statement added')
+        print("statement added")
         server_socket.close()
 
 
@@ -84,11 +89,11 @@ async def peer_request(ip: str, ids: list[str], timeout: float) -> list | None:
     finally:
         transport.close()
 
+
 async def parallel_peer_requests(server_response: dict, timeout: float):
     print("server_response", server_response)
     coroutines = [
         peer_request(ip, ids, timeout)
-        for ip, ids in server_response.get('ip_hash_mappings', {}).items()
+        for ip, ids in server_response.get("ip_hash_mappings", {}).items()
     ]
     return await gather(*coroutines, return_exceptions=True)
-
