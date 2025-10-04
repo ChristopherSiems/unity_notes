@@ -1,7 +1,6 @@
-"""
-setup.py - Run this once to initialize the Qdrant collection
-Usage: python setup.py
-"""
+
+#setup.py - Run this once to initialize the Qdrant collection
+
 
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams
@@ -38,21 +37,20 @@ def setup_collection():
         ),
     )
     
-    print(f"✓ Collection '{COLLECTION_NAME}' created successfully")
-    print(f"✓ Vector size: {VECTOR_SIZE}")
-    print(f"✓ Distance metric: COSINE")
-    print("\nSetup complete! You can now run the main application.")
+    print(f"Collection: '{COLLECTION_NAME}' created successfully")
+    print(f"Vector size: {VECTOR_SIZE}")
+    print(f"Distance metric: COSINE")
+    print("\gooooooooooooood.")
 
 
 if __name__ == "__main__":
-    print("="*60)
     print("QDRANT DATABASE SETUP")
-    print("="*60 + "\n")
     
     try:
         setup_collection()
     except Exception as e:
-        print(f"\n❌ Error during setup: {e}")
+        print(f"\n Error during setup: {e}")
         print("\nMake sure Qdrant is running:")
         print("  Docker: docker run -p 6333:6333 qdrant/qdrant")
+
         print("  Local: qdrant server")
