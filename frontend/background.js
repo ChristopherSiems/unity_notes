@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
   chrome.contextMenus.create({
     id: "requestNotes",
-    title: "Get Notes",
+    title: "Fact Check",
     contexts: ["selection"]
   });
 });
@@ -216,7 +216,7 @@ async function showSummaryPopup(selectedText) {
     popup = document.createElement("div");
     popup.id = "summary-popup-ext";
     popup.innerHTML = `
-        <h3 style="margin-top: 8px; text-align: center; font-size: 16px; color: #333;">Received Notes</h3>
+        <h3 style="margin-top: 8px; text-align: center; font-size: 16px; color: #333;">Community Context</h3>
         <div id="summaryContent" style="
             font-size: 14px;
             text-align: left;
