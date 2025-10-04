@@ -24,7 +24,7 @@ class NoteManager:
         self.session = session
     
     def create(self, note:str, statement: str) -> None:
-        hash_val = xxh128_intdigest(statement)
+        hash_val = xxh64_intdigest(statement)
         note = Notes(hash = hash_val, note = note)
         self.session.add(note)
         self.session.commit()
