@@ -9,4 +9,5 @@ services:
       - "6333:6333"   # REST API
       - "6334:6334"   # gRPC (optional)
     volumes:
-      - ./server-backend/qdrant_storage:/qdrant/storage
+      - ./server_backend/qdrant_storage:/qdrant/storage
+
