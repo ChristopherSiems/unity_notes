@@ -38,6 +38,8 @@ class SocketManager:
         note_set = set()
         for note in notes:
             note_set.add(note["notes"][0])
+        notes = list(note_set)
+        print(notes)
 
         return notes
 
