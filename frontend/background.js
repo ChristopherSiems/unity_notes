@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
   chrome.contextMenus.create({
     id: "requestNotes",
-    title: "Fact Check",
+    title: "Get Context",
     contexts: ["selection"]
   });
 });
@@ -209,12 +209,12 @@ async function showSummaryPopup(selectedText) {
     let popup = document.getElementById("summary-popup-ext");
     if (popup) popup.remove();
 
-    // Create popup with spinner
+    // Create popup with spinner + "Loading Context"
     popup = document.createElement("div");
     popup.id = "summary-popup-ext";
     popup.innerHTML = `
-        <h3 style="margin-top: 8px; text-align: center; font-size: 16px; color: #333;">
-          Community Context
+        <h3 id="popupHeader" style="margin-top: 8px; text-align: center; font-size: 16px; color: #333;">
+          Loading Context
         </h3>
         <div id="summaryContent" style="
             display: flex;
@@ -280,12 +280,18 @@ async function showSummaryPopup(selectedText) {
 
         const data = await response.json();
         const summaryDiv = popup.querySelector("#summaryContent");
+        const header = popup.querySelector("#popupHeader");
+
+        header.textContent = "Community Context";  // update header
         summaryDiv.style.display = "block";
         summaryDiv.style.textAlign = "left";
         summaryDiv.style.height = "auto";
         summaryDiv.textContent = data.summary;
     } catch (err) {
         const summaryDiv = popup.querySelector("#summaryContent");
+        const header = popup.querySelector("#popupHeader");
+
+        header.textContent = "Community Context";  // still update header
         summaryDiv.textContent = `Error fetching summary: ${err}`;
         summaryDiv.style.color = "red";
     }
