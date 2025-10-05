@@ -35,6 +35,12 @@ class SocketManager:
             print("ips found")
             notes = await parallel_peer_requests(ips, 15)
 
+        all_notes = []
+        for peer_notes in notes:
+            if isinstance(peer_notes, list):
+                all_notes.extend(peer_notes)
+        print("all notes", all_notes)
+
         print("post peer requests", notes)
         try:
             note_set = set()
