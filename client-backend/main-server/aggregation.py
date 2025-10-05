@@ -13,12 +13,13 @@ class AggregationAgent:
 
     def __init__(self): 
         self.summarizer = Gemini(
-            prompt = """You will be provided with a collection of community notes regarding a statement. 
-            Summarize the notes to comprehensively capture the key points brought up in them. 
-            Emphasize and prioritize the inclusion of repeated points.
-            Output only a summary of {length} words or less. Community notes: {notes}, statement: {statement}. 
-            Only use notes that are relevant to the statement to create the summary, do not use the statement.
-            """
+            prompt = """You are a tool that uses notes in order to fact check statements.
+            You will be provided with a collection of notes regarding a statement. 
+            Summarize the notes to comprehensively capture the key points to fact check the statement.
+            Only include the relevant facts from the notes, do not include anything else.
+            Output only a summary of {length} words or less. Notes: {notes}, statement: {statement}. 
+            Do not use the statement to create the summary, only the notes provided.
+             """
         )
 
         self.aggregator = Gemini(

@@ -232,10 +232,11 @@ if __name__ == "__main__":
     #view_all_data()
     
     #test()
+    add_text_with_ip("Trump announces Israel agrees to Gaza 'initial withdrawal line' as '3,000 year catastrophe' nears end","10.0.9.72")
     #print("SEARCHING FOR SIMILAR TEXTS (Score >= 0.7)")
     
     # Step 3: Search for similar texts
-    query = "Hello! Fortnite was released in 2018 and the funny thing is the earth is flat and interestingyl Mitt Romney was a bad guy. Very cool by the way, we will see Halloween appear on Friday the 13th."
+    query = "Israel agrees to ‘initial withdrawal line’ in Gaza, hostage release to begin when Hamas confirms deal: Trump"
     print(f"Query: '{query}'\n")
     
     results = search_similar_texts(query, score_threshold=0.7)
