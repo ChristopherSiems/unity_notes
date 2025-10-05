@@ -17,7 +17,7 @@ class SocketManager:
     def __init__(self):
         pass
 
-    def get_notes(self, statement: str) -> list:
+    async def get_notes(self, statement: str) -> list:
         """
         input: statement
         output: list of notes related to statement
@@ -33,7 +33,7 @@ class SocketManager:
         server_socket.close()
         if ips:
             print("ips found")
-            notes = parallel_peer_requests(ips, 15)
+            notes = await parallel_peer_requests(ips, 15)
 
         note_set = set()
         for note in notes:

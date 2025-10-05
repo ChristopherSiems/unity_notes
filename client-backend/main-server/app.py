@@ -1,11 +1,11 @@
 import os
 
-from db.models import NoteManager, db_session
-from socket_util.manager import SocketManager
 from aggregation import AggregationAgent
+from db.models import NoteManager, db_session
 from flask import (Flask, flash, jsonify, redirect, render_template, request,
                    url_for)
 from flask_cors import CORS
+from socket_util.manager import SocketManager
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -44,7 +44,6 @@ def add_note():
             note_manager = NoteManager(session)
             note_manager.create(note, statement)
             SocketManager.add_statement_to_central(statement)
-            
 
             return jsonify({"message": "Note created successfully", "note": note}), 201
 
@@ -62,7 +61,6 @@ def get_note_by_hash(hash_val):
             notes = note_manager.get_notes_by_hash(hash_val)
 
             notes_list = [n.note for n in notes]
-
 
         return jsonify({"notes": notes_list}), 200
 
@@ -88,13 +86,13 @@ async def get_summary():
 
         statement = data.get("statement")
         socket_manager = SocketManager()
-        
+
         notes = await socket_manager.get_notes(statement)
         aggregator = AggregationAgent()
-        summary = aggregator.summarize(notes, statement, max_size=7, output_size=50)
-        
+        summary = aggregator.summarize(
+            notes, statement, max_size=7, output_size=50)
+
         print("yabayda", summary)
-        
 
         # get summary
 
