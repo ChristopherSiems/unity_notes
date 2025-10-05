@@ -13,12 +13,11 @@ class AggregationAgent:
 
     def __init__(self): 
         self.summarizer = Gemini(
-            prompt = """You will be provided with a collection of community notes regarding a topic from a statement that someone is seeking context for. 
-            Succinctly summarize the notes to comprehensively capture the key points brought up across the notes. Emphasize and prioritize repeated points.
-            Do not preface the summary with anything such as "the notes say".
+            prompt = """You will be provided with a collection of community notes regarding a statement. 
+            Summarize the notes to comprehensively capture the key points brought up in them. 
+            Emphasize and prioritize the inclusion of repeated points.
             Output only a summary of {length} words or less. Community notes: {notes}, statement: {statement}. 
-            Only use information from the notes that is relevant to the statement to create the summary.
-            If there are no notes, return "No community context for this statement."
+            Only use notes that are relevant to the statement to create the summary, do not use the statement.
             """
         )
 
