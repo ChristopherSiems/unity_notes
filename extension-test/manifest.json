@@ -1,32 +1,21 @@
-
 {
   "manifest_version": 3,
-  "name": "Gemma Definition Helper",
+  "name": "Fact Highlighter",
   "version": "1.0",
-  "description": "Get AI-powered definitions using Gemma 3 270M",
-  "permissions": [
-    "contextMenus",
-    "offscreen"
-  ],
+  "description": "Automatically highlight facts on web pages using AI",
   "host_permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "https://generativelanguage.googleapis.com/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
+  "action": {},
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["offscreen.html", "offscreen.js"],
-      "matches": ["<all_urls>"]
-    }
   ]
 }
-
-
