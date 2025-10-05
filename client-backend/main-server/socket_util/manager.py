@@ -39,10 +39,10 @@ class SocketManager:
         note_set = set()
         for note in notes:
             note_set.add(note["notes"][0])
-        notes = list(note_set)
-        print(notes)
+        new_notes = list(note_set)
+        print("new notes", new_notes)
 
-        return notes
+        return new_notes
 
     def add_statement_to_central(statement: str) -> None:
         server_socket = socket(AF_INET, SOCK_STREAM)
