@@ -36,11 +36,14 @@ class SocketManager:
             notes = await parallel_peer_requests(ips, 15)
 
         print("post peer requests", notes)
-        note_set = set()
-        for note in notes:
-            note_set.add(note["notes"][0])
-        new_notes = list(note_set)
-        print("new notes", new_notes)
+        try:
+            note_set = set()
+            for note in notes:
+                note_set.add(note["notes"][0])
+            new_notes = list(note_set)
+            print("new notes", new_notes)
+        except Exception as e:
+            print("we died", e)
 
         return new_notes
 
