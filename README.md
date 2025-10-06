@@ -4,6 +4,12 @@
 
 ---
 
+## Why
+
+The internet is full of misinformation and bias on platforms run by large and powerful companies and people. Our fellow users can be used as sources for context for much of this information, but the entities that run the platforms may not always support truth discovery. We are all passionate about freedom of communication and knowledge transparency.  With media consolidation and misinformation on the rise, we wanted to build a system which brings control over knowledge transfer back to communities. Unity Notes builds a community notes system in a decentralized platform-agnostic manner, allowing users to create censorshipless notes for content on any web platform.
+
+---
+
 ## Posting Notes
 
 **Writing a note.**
@@ -25,12 +31,6 @@
 **Returned community context.**
 
 ![Returned community context.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes6.jpg)
-
----
-
-## Why
-
-The internet is full of misinformation and bias on platforms run by large and powerful companies and people. Our fellow users can be used as sources for context for much of this information, but the entities that run the platforms may not always support truth discovery. We are all passionate about freedom of communication and knowledge transparency.  With media consolidation and misinformation on the rise, we wanted to build a system which brings control over knowledge transfer back to communities. Unity Notes builds a community notes system in a decentralized platform-agnostic manner, allowing users to create censorshipless notes for content on any web platform.
 
 ---
 
