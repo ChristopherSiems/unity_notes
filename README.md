@@ -2,12 +2,13 @@
 
 Unity Notes is a decentralized peer-to-peer platform-agnostic community notes system.
 
-##Posting Notes
+## Posting Notes
+
 ![Writing a note.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes3.jpg)
 
 ![Posted community context.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes4.jpg)
 
-##Getting Context
+## Getting Context
 ![Searching for context.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes5.jpg)
 
 ![Returned community context.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes6.jpg)
