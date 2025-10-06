@@ -4,12 +4,21 @@ Unity Notes is a decentralized peer-to-peer platform-agnostic community notes sy
 
 ## Posting Notes
 
+Writing a note.
+
 ![Writing a note.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes3.jpg)
+
+Posted community context.
 
 ![Posted community context.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes4.jpg)
 
 ## Getting Context
+
+Searching for context.
+
 ![Searching for context.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes5.jpg)
+
+Returned community context.
 
 ![Returned community context.](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes6.jpg)
 
@@ -23,7 +32,12 @@ When a user finds a statement online that they can add more context to, all they
 
 When a user finds a statement online that they would like more context to, all they need to do is highlight it and use the Chrome extension to request context. The server will be contacted and the Qdrant database will be searched for semantically similar statements to the highlighted statement. The users who left comments on semantically similar statements will have their contact info gathered by the server and sent back to the original client. The client will then reach out to the peers themselves and request the notes. Upon receiving notes from peers, a Gemini based agent is used to summarize the notes to provide context to the original query.
 
+Context Query map
+
+
 ![Context Query Map](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes1.jpg)
+
+Context Query Map
 
 ![Note Creation Diagram](https://github.com/ChristopherSiems/unity_notes/raw/main/unityNotes2.jpg)
 
